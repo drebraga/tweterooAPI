@@ -1,4 +1,4 @@
-import express, { query } from "express";
+import express from "express";
 import cors from "cors";
 import USERS from "./USERS.js";
 import TWEETS from "./TWEETS.js";
@@ -6,6 +6,9 @@ import TWEETS from "./TWEETS.js";
 const server = express();
 const PORT = 5000;
 const MAXSHOW = 10;
+const CREATED = 201;
+const BADREQUEST = 400;
+const UNAUTHORIZED = 401;
 
 server.use(express.json());
 server.use(cors());
@@ -13,14 +16,13 @@ server.use(cors());
 server.post("/sign-up", (req, res) => {
     const user = req.body;
     USERS.push(user);
-    res.sendStatus(201);
+    res.sendStatus(CREATED);
 });
 
 server.get("/tweets", (req, res) => {
-    let page = 1;
-    req.query.page ? page = parseInt(req.query.page) : false;
-    if (!(page >= 1)) {
-        return res.status(400).send("Informe uma página válida!");
+    let page = req.query.page ? page = parseInt(req.query.page) : 1;
+    if (page <= 1) {
+        return res.status(BADREQUEST).send("Informe uma página válida!");
     }
     const lastTweets = [];
     const min = 0 + (MAXSHOW * (page - 1));
@@ -30,7 +32,7 @@ server.get("/tweets", (req, res) => {
             ...TWEETS[i], avatar: USERS.find(e => e.username === TWEETS[i].username).avatar
         });
     }
-    res.send(lastTweets);
+    return res.send(lastTweets);
 });
 
 server.get("/tweets/:username", (req, res) => {
@@ -39,9 +41,10 @@ server.get("/tweets/:username", (req, res) => {
         if (username === e.username) {
             return {
                 ...e, avatar: USERS.find(u => u.username === e.username).avatar
-            }
+            };
         }
-    })
+        return;
+    });
     res.send(userTweets);
 });
 
@@ -50,9 +53,9 @@ server.post("/tweets", (req, res) => {
     const { user } = req.headers;
     if (USERS.some(e => e.username === user)) {
         TWEETS.unshift({ tweet, username: user });
-        res.sendStatus(201);
+        res.sendStatus(CREATED);
     } else {
-        res.status(401).send("UNAUTHORIZED");
+        res.sendStatus(UNAUTHORIZED);
     }
 });
 
