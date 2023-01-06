@@ -1,4 +1,4 @@
-import express from "express";
+import express, { query } from "express";
 import cors from "cors";
 import USERS from "./USERS.js";
 import TWEETS from "./TWEETS.js";
@@ -13,13 +13,15 @@ server.use(cors());
 server.post("/sign-up", (req, res) => {
     const user = req.body;
     USERS.push(user);
-    res.send("OK");
+    res.status(201).send("OK");
 });
 
 server.get("/tweets", (req, res) => {
+    const page = parseInt(req.query.page);
     const lastTweets = [];
-    const max = TWEETS.length < MAXSHOW ? TWEETS.length : MAXSHOW;
-    for (let i = 0; i < max; i++) {
+    const min = 0 + (MAXSHOW * (page - 1));
+    const max = TWEETS.length < MAXSHOW * page ? TWEETS.length : MAXSHOW * page;
+    for (let i = min; i < max; i++) {
         lastTweets.push({
             ...TWEETS[i], avatar: USERS.find(e => e.username === TWEETS[i].username).avatar
         });
@@ -28,12 +30,13 @@ server.get("/tweets", (req, res) => {
 });
 
 server.post("/tweets", (req, res) => {
-    const tweet = req.body;
-    if (USERS.some(e => e.username === tweet.username)) {
-        TWEETS.unshift(tweet);
-        res.send("OK");
+    const { tweet } = req.body;
+    const { user } = req.headers;
+    if (USERS.some(e => e.username === user)) {
+        TWEETS.unshift({ tweet, username: user });
+        res.status(201).send("OK");
     } else {
-        res.send("UNAUTHORIZED");
+        res.status(401).send("UNAUTHORIZED");
     }
 });
 
