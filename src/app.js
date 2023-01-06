@@ -4,7 +4,7 @@ import USERS from "./USERS.js";
 import TWEETS from "./TWEETS.js";
 
 const server = express();
-const PORT = 5001;
+const PORT = 5000;
 const MAXSHOW = 10;
 const CREATED = 201;
 const BADREQUEST = 400;
