@@ -9,13 +9,14 @@ const MAXSHOW = 10;
 const CREATED = 201;
 const BADREQUEST = 400;
 const UNAUTHORIZED = 401;
+const IS_STRING = "string";
 
 server.use(express.json());
 server.use(cors());
 
 server.post("/sign-up", (req, res) => {
     const user = req.body;
-    if (!user.username || !user.avatar || !(typeof user.username === "string") || !(typeof user.avatar === "string")) {
+    if (!user.username || !user.avatar || !(typeof user.username === IS_STRING) || !(typeof user.avatar === IS_STRING)) {
         return res.status(BADREQUEST).send("Todos os campos são obrigatórios!");
     }
     USERS.push(user);
@@ -53,7 +54,7 @@ server.get("/tweets/:username", (req, res) => {
 server.post("/tweets", (req, res) => {
     const { tweet } = req.body;
     const { user } = req.headers;
-    if (!user || !tweet || !(typeof user === "string") || !(typeof tweet === "string")) {
+    if (!user || !tweet || !(typeof user === IS_STRING) || !(typeof tweet === IS_STRING)) {
         return res.status(BADREQUEST).send("Todos os campos são obrigatórios!");
     }
     if (USERS.some(e => e.username === user)) {
