@@ -1,8 +1,3 @@
-const TWEETS = [
-	{
-		username: "bobesponja",
-		tweet: "eu amo o hub"
-	}
-];
+const TWEETS = [];
 
 export default TWEETS;

@@ -5,6 +5,7 @@ import TWEETS from "./TWEETS.js";
 
 const server = express();
 const PORT = 5000;
+const MAXSHOW = 10;
 
 server.use(express.json());
 server.use(cors());
@@ -17,20 +18,24 @@ server.post("/sign-up", (req, res) => {
 
 server.get("/tweets", (req, res) => {
     const lastTweets = [];
-    const max = TWEETS.length < 10 ? TWEETS.length : 10;
+    const max = TWEETS.length < MAXSHOW ? TWEETS.length : MAXSHOW;
     for (let i = 0; i < max; i++) {
         lastTweets.push({
             ...TWEETS[i], avatar: USERS.find(e => e.username === TWEETS[i].username).avatar
         });
     }
-    console.log(lastTweets);
     res.send(lastTweets);
 })
 
 server.post("/tweets", (req, res) => {
     const tweet = req.body;
-    TWEETS.unshift(tweet);
-    res.send("OK");
+    if (USERS.some(e => e.username === tweet.username)) {
+        TWEETS.unshift(tweet);
+        res.send("OK");
+    } else {
+        res.send("UNAUTHORIZED");
+    }
+
 })
 
 server.listen(PORT, () => {
