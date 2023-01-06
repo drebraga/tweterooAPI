@@ -17,7 +17,11 @@ server.post("/sign-up", (req, res) => {
 });
 
 server.get("/tweets", (req, res) => {
-    const page = parseInt(req.query.page);
+    let page = 1;
+    req.query.page ? page = parseInt(req.query.page) : false;
+    if (!(page >= 1)) {
+        return res.status(400).send("Informe uma página válida!");
+    }
     const lastTweets = [];
     const min = 0 + (MAXSHOW * (page - 1));
     const max = TWEETS.length < MAXSHOW * page ? TWEETS.length : MAXSHOW * page;
@@ -27,6 +31,18 @@ server.get("/tweets", (req, res) => {
         });
     }
     res.send(lastTweets);
+});
+
+server.get("/tweets/:username", (req, res) => {
+    const { username } = req.params;
+    const userTweets = TWEETS.filter(e => {
+        if (username === e.username) {
+            return {
+                ...e, avatar: USERS.find(u => u.username === e.username).avatar
+            }
+        }
+    })
+    res.send(userTweets);
 });
 
 server.post("/tweets", (req, res) => {
