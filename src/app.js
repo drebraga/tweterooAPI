@@ -15,7 +15,7 @@ server.use(cors());
 
 server.post("/sign-up", (req, res) => {
     const user = req.body;
-    if (!user.username || !user.avatar) {
+    if (!user.username || !user.avatar || !(typeof user.username === "string") || !(typeof user.avatar === "string")) {
         return res.status(BADREQUEST).send("Todos os campos são obrigatórios!");
     }
     USERS.push(user);
@@ -53,7 +53,7 @@ server.get("/tweets/:username", (req, res) => {
 server.post("/tweets", (req, res) => {
     const { tweet } = req.body;
     const { user } = req.headers;
-    if (!user || !tweet) {
+    if (!user || !tweet || !(typeof user === "string") || !(typeof tweet === "string")) {
         return res.status(BADREQUEST).send("Todos os campos são obrigatórios!");
     }
     if (USERS.some(e => e.username === user)) {
