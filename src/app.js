@@ -46,8 +46,9 @@ server.get("/tweets/:username", (req, res) => {
             return {
                 ...e, avatar: USERS.find(u => u.username === e.username).avatar
             };
+        } else {
+            return false;
         }
-        return;
     });
     res.send(userTweets);
 });
