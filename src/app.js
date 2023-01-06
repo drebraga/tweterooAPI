@@ -4,7 +4,7 @@ import USERS from "./USERS.js";
 import TWEETS from "./TWEETS.js";
 
 const server = express();
-const PORT = 5000;
+const PORT = 5001;
 const MAXSHOW = 10;
 const CREATED = 201;
 const BADREQUEST = 400;
@@ -49,7 +49,7 @@ server.get("/tweets/:username", (req, res) => {
         }
         return;
     });
-    return res.send(userTweets);
+    res.send(userTweets);
 });
 
 server.post("/tweets", (req, res) => {
