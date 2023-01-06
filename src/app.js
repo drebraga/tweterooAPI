@@ -13,7 +13,7 @@ server.use(cors());
 server.post("/sign-up", (req, res) => {
     const user = req.body;
     USERS.push(user);
-    res.status(201).send("OK");
+    res.sendStatus(201);
 });
 
 server.get("/tweets", (req, res) => {
@@ -50,7 +50,7 @@ server.post("/tweets", (req, res) => {
     const { user } = req.headers;
     if (USERS.some(e => e.username === user)) {
         TWEETS.unshift({ tweet, username: user });
-        res.status(201).send("OK");
+        res.sendStatus(201);
     } else {
         res.status(401).send("UNAUTHORIZED");
     }
