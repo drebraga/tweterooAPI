@@ -20,8 +20,9 @@ server.post("/sign-up", (req, res) => {
 });
 
 server.get("/tweets", (req, res) => {
-    let page = req.query.page ? page = parseInt(req.query.page) : 1;
-    if (page <= 1) {
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    console.log(page)
+    if (page < 1) {
         return res.status(BADREQUEST).send("Informe uma página válida!");
     }
     const lastTweets = [];
