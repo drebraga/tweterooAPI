@@ -15,13 +15,15 @@ server.use(cors());
 
 server.post("/sign-up", (req, res) => {
     const user = req.body;
+    if (!user.username || !user.avatar) {
+        return res.status(BADREQUEST).send("Todos os campos são obrigatórios!");
+    }
     USERS.push(user);
-    res.sendStatus(CREATED);
+    return res.sendStatus(CREATED);
 });
 
 server.get("/tweets", (req, res) => {
-    let page = req.query.page ? parseInt(req.query.page) : 1;
-    console.log(page)
+    const page = req.query.page ? parseInt(req.query.page) : 1;
     if (page < 1) {
         return res.status(BADREQUEST).send("Informe uma página válida!");
     }
@@ -44,14 +46,16 @@ server.get("/tweets/:username", (req, res) => {
                 ...e, avatar: USERS.find(u => u.username === e.username).avatar
             };
         }
-        return;
     });
-    res.send(userTweets);
+    return res.send(userTweets);
 });
 
 server.post("/tweets", (req, res) => {
     const { tweet } = req.body;
     const { user } = req.headers;
+    if (!user || !tweet) {
+        return res.status(BADREQUEST).send("Todos os campos são obrigatórios!");
+    }
     if (USERS.some(e => e.username === user)) {
         TWEETS.unshift({ tweet, username: user });
         res.sendStatus(CREATED);
