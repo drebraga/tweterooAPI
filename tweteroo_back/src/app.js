@@ -14,7 +14,7 @@ server.post("/sign-up", (req, res) => {
     const user = req.body;
     USERS.push(user);
     res.send("OK");
-})
+});
 
 server.get("/tweets", (req, res) => {
     const lastTweets = [];
@@ -25,7 +25,7 @@ server.get("/tweets", (req, res) => {
         });
     }
     res.send(lastTweets);
-})
+});
 
 server.post("/tweets", (req, res) => {
     const tweet = req.body;
@@ -35,9 +35,8 @@ server.post("/tweets", (req, res) => {
     } else {
         res.send("UNAUTHORIZED");
     }
-
-})
+});
 
 server.listen(PORT, () => {
-    console.log(`Server running on port number: ${PORT}`)
+    console.log(`Server running on port number: ${PORT}`);
 });
