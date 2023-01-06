@@ -1,0 +1,5 @@
+# Ignore the frontend aplication
+tweteroo_front/
+
+# Ignore Node
+node_modules/
